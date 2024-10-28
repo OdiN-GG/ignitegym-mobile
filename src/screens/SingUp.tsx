@@ -1,13 +1,24 @@
 import { ScrollView, VStack , Text, Image, Center, Heading} from "@gluestack-ui/themed"
+
+import { useNavigation } from "@react-navigation/native"
+
+import { PropsDasRotasPublicas } from "@routes/auth.routes"
+
 import imgBg from "@assets/background.png"
 import Logo from "@assets/logo.svg"
-import { Roboto_700Bold } from "@expo-google-fonts/roboto"
 
 import { Input } from "@components/Input"
 import { Button } from "@components/Button"
 
 
 export function SingUp() {
+
+    const navegação = useNavigation<PropsDasRotasPublicas>()
+
+    function handlerTelaLogin(){
+        navegação.navigate("SingIn")
+    }
+
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <VStack 
@@ -78,6 +89,7 @@ export function SingUp() {
                         <Button
                             title="Voltar para Login"
                             tipoButton="Segundario"
+                            onPress={handlerTelaLogin}
 
                         >
 

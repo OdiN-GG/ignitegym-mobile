@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { config } from "./config/gluestack-ui.config"
 import { Loading } from '@components/Loading';
 import { SingUp } from '@screens/SingUp';
+import { Rotas } from '@routes/index';
 
 
 export default function App() {
@@ -15,7 +16,7 @@ export default function App() {
   return (
     <GluestackUIProvider config={config}>
       <StatusBar style="auto" />
-      {loadfonts ? <SingUp/>: <Loading/>}
+      {loadfonts ? <Rotas/>: <Loading/>}
     </GluestackUIProvider>
   )
 }

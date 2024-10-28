@@ -1,18 +1,30 @@
 import { ScrollView, VStack , Text, Image, Center, Heading} from "@gluestack-ui/themed"
+
+import { useNavigation } from "@react-navigation/native"
+
+import { PropsDasRotasPublicas } from "@routes/auth.routes"
+
 import imgBg from "@assets/background.png"
 import Logo from "@assets/logo.svg"
-import { Roboto_700Bold } from "@expo-google-fonts/roboto"
 
 import { Input } from "@components/Input"
 import { Button } from "@components/Button"
 
 
+
 export function SingIn() {
+
+    const navegação = useNavigation<PropsDasRotasPublicas>()
+
+    function handlerCriarConta(){
+        navegação.navigate("SingUp")
+    }
+
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <VStack 
                 flex={1} 
-                bg="$gray700"
+                
             >
                 <Image 
                     source={imgBg} 
@@ -53,8 +65,8 @@ export function SingIn() {
                             Acesse sua conta
                          </Heading>
 
-                        <Input placeholder="E-mail" keyboardType="email-address"/>
-                        <Input placeholder="Senha" keyboardType="numeric"/>
+                        <Input placeholder="E-mail" keyboardType="email-address" />
+                        <Input placeholder="Senha" keyboardType="numeric" secureTextEntry/>
 
                         <Button
                         title="Acessar"
@@ -79,7 +91,7 @@ export function SingIn() {
                         <Button
                             title="Criar conta"
                             tipoButton="Segundario"
-
+                            onPress={handlerCriarConta}
                         >
 
                         </Button>
