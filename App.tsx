@@ -1,20 +1,23 @@
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
+
+import { SingIn } from '@screens/SingIn';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { config } from "./config/gluestack-ui.config"
+import { Loading } from '@components/Loading';
+import { SingUp } from '@screens/SingUp';
+
 
 export default function App() {
+
+  const [loadfonts]= useFonts({Roboto_400Regular, Roboto_700Bold})
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <GluestackUIProvider config={config}>
       <StatusBar style="auto" />
-    </View>
-  );
+      {loadfonts ? <SingUp/>: <Loading/>}
+    </GluestackUIProvider>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
