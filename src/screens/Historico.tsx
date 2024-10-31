@@ -24,7 +24,7 @@ export function Historico() {
         },
         {
           grupo: ["Peito"],
-          exercicio: [  "Supino Reto"]
+          exercicio: [  "Supinssso Reto"]
         },
         {
           grupo: ["Ombro"],
