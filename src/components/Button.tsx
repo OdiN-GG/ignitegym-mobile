@@ -1,38 +1,45 @@
-import { ButtonSpinner, Button as GsButton, Text } from "@gluestack-ui/themed";
-import { ComponentProps } from "react";
+import {
+  ButtonSpinner,
+  Button as GluestackButton,
+  Text,
+} from '@gluestack-ui/themed'
+import { ComponentProps } from 'react'
 
-type Props = ComponentProps<typeof GsButton> & {
-    title: string
-    carregando?: boolean
-    tipoButton?: "Principal" | "Segundario"
+type Props = ComponentProps<typeof GluestackButton> & {
+  title: string
+  variant?: 'solid' | 'outline'
+  isLoading?: boolean
 }
 
-export function Button({ title, carregando= false, tipoButton= "Principal", ...rest} : Props){
-    return(
-        <GsButton
-            w={"$full"}
-            h={"$14"}
-            bg={tipoButton === "Segundario" ? "transparent" : "$green700"}
-            borderWidth={tipoButton === "Segundario" ? "$1" : "$0"}
-            borderColor={tipoButton === "Segundario" ? "$green700" : "tranparent" }
-            $active={{
-                backgroundColor: tipoButton === "Principal" ? "$green500" : "$gray500"
-            }}
-            {...rest}
+export function Button({
+  title,
+  variant = 'solid',
+  isLoading = false,
+  ...props
+}: Props) {
+  return (
+    <GluestackButton
+      w="$full"
+      h="$14"
+      bg={variant === 'outline' ? 'transparent' : '$green700'}
+      borderWidth={variant === 'outline' ? '$1' : '$0'}
+      borderColor="$green500"
+      rounded="$sm"
+      $active-bg={variant === 'outline' ? '$gray500' : '$green500'}
+      disabled={isLoading}
+      {...props}
+    >
+      {isLoading ? (
+        <ButtonSpinner color="$white" />
+      ) : (
+        <Text
+          color={variant === 'outline' ? '$green500' : '$white'}
+          fontFamily="$heading"
+          fontSize="$sm"
         >
-            
-            {
-                carregando ? <ButtonSpinner/> : 
-
-                <Text
-                color={tipoButton === "Segundario" ? "$green700" : "$white"}
-                fontSize={"$md"}
-                fontFamily="$heading"
-                >
-                    {title}
-                </Text>
-            }
-
-        </GsButton>
-    )
+          {title}
+        </Text>
+      )}
+    </GluestackButton>
+  )
 }
