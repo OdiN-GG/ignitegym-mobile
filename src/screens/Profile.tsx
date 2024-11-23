@@ -99,7 +99,7 @@ export function Profile() {
           </Heading>
 
           <Center w="$full" gap="$4">
-            <Input placeholder="Senha antiga" bg="$gray600" secureTextEntry />
+            <Input placeholder="Senhadssssad antiga" bg="$gray600" secureTextEntry />
             <Input placeholder="Nova senha" bg="$gray600" secureTextEntry />
             <Input
               placeholder="Confirme a nova senha"
