@@ -1,12 +1,15 @@
 import {
+  Alert,
   Center,
   Heading,
   Image,
   ScrollView,
   Text,
+  Toast,
   VStack,
 } from '@gluestack-ui/themed'
 
+import axios from 'axios'
 
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigation } from '@react-navigation/native'
@@ -20,6 +23,7 @@ import Logo from '@assets/logo.svg'
 
 import { Input } from '@components/Input'
 import { Button } from '@components/Button'
+import { api } from '@services/api';
 
 type FormDataProps = {
   email: string
@@ -31,9 +35,6 @@ const singUpSchema = yup.object({
     password: yup.string().required("Digite sua senha "),
 })
   
-    
-  
-
 
 export function SignIn() {
 
@@ -46,11 +47,18 @@ const navigation = useNavigation<AuthNavigatorRoutesProps>()
     navigation.navigate('signUp')
   }
 
-  function handleSingIn({email, password}: FormDataProps) {
-    console.log({email, password})
-  }
+  async function handleSingIn({email, password}: FormDataProps) {
+    try {
+      const reposnse = await api.post("/users", {email, password})
+      console.log(reposnse)
 
-  
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        
+         console.log(error.response?.data.message)
+      }
+    }
+  }
 
   return (
     <ScrollView

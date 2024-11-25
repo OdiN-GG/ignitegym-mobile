@@ -5,6 +5,7 @@ import {
   ScrollView,
   Text,
   VStack,
+  useToast,
 } from '@gluestack-ui/themed'
 
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -18,6 +19,11 @@ import Logo from '@assets/logo.svg'
 import { Button } from '@components/Button'
 import { Input } from '@components/Input'
 import { Controller, useForm } from 'react-hook-form'
+import { api } from '@services/api'
+import axios from 'axios'
+import { Alert } from 'react-native'
+import { AppError } from '@utils/AppError'
+import { ToastMessage } from '@components/ToastMessage'
 
 type FormDataProps = {
   name: string
@@ -54,14 +60,33 @@ export function SignUp() {
     navigation.goBack()
   }
 
-  function handleSignUp({
-    name,
-    email,
-    password,
-    password_confirm,
-  }: FormDataProps) {
+  const toast = useToast()
 
-    console.log({ name, email, password, password_confirm })
+  async function handleSignUp({
+        name,
+        email,
+        password,
+    }: FormDataProps) {
+
+      try {
+          const response = await api.post('/users', {name, email, password})
+          console.log(response.data)
+
+      } catch (error) {
+        const isAppError = error instanceof AppError
+
+        toast.show({
+          placement: "top",
+          render: ({ id }) => (
+            <ToastMessage
+              id={id}
+              title={isAppError ? error.message : "Erro inesperado"}
+              action="error"
+              onClose={() => toast.close(id)}
+            />
+          ),
+        })
+      }
   }
 
   return (

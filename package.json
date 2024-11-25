@@ -18,8 +18,10 @@
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
+    "axios": "^1.7.7",
     "expo": "~52.0.11",
     "expo-font": "~13.0.1",
+    "expo-image-picker": "~16.0.3",
     "expo-status-bar": "~2.0.0",
     "lucide-react": "^0.454.0",
     "lucide-react-native": "^0.454.0",
@@ -31,8 +33,7 @@
     "react-native-screens": "~4.1.0",
     "react-native-svg": "15.8.0",
     "react-native-web": "~0.19.10",
-    "yup": "^1.4.0",
-    "expo-image-picker": "~16.0.3"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
