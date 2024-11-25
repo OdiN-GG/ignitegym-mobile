@@ -6,6 +6,8 @@ import {
   Text,
   VStack,
   useToast,
+  Toast,
+  ToastTitle
 } from '@gluestack-ui/themed'
 
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -20,10 +22,8 @@ import { Button } from '@components/Button'
 import { Input } from '@components/Input'
 import { Controller, useForm } from 'react-hook-form'
 import { api } from '@services/api'
-import axios from 'axios'
 import { Alert } from 'react-native'
 import { AppError } from '@utils/AppError'
-import { ToastMessage } from '@components/ToastMessage'
 
 type FormDataProps = {
   name: string
@@ -73,19 +73,31 @@ export function SignUp() {
           console.log(response.data)
 
       } catch (error) {
+
         const isAppError = error instanceof AppError
+
+        const title : string = isAppError ? error.message : "Erro no servidor"
 
         toast.show({
           placement: "top",
-          render: ({ id }) => (
-            <ToastMessage
-              id={id}
-              title={isAppError ? error.message : "Erro inesperado"}
-              action="error"
-              onClose={() => toast.close(id)}
-            />
-          ),
+          
+          render: ({ id }) => {
+            const toastId = "toast-" + id
+            return (
+              <Toast
+                bg='$red'
+                marginTop={'$16'}
+              >
+                <ToastTitle>
+                  {title}
+                </ToastTitle>
+              </Toast>
+            )
+          },
         })
+
+        //Alert.alert(title)
+        
       }
   }
 
