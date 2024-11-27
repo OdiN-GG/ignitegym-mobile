@@ -1,15 +1,15 @@
 import {
-  Alert,
   Center,
   Heading,
   Image,
   ScrollView,
   Text,
   Toast,
+  ToastTitle,
+  useToast,
   VStack,
 } from '@gluestack-ui/themed'
 
-import axios from 'axios'
 
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigation } from '@react-navigation/native'
@@ -24,6 +24,9 @@ import Logo from '@assets/logo.svg'
 import { Input } from '@components/Input'
 import { Button } from '@components/Button'
 import { api } from '@services/api';
+import { useAuth } from '@hooks/useAuth'
+import { AppError } from '@utils/AppError'
+import { useState } from 'react';
 
 type FormDataProps = {
   email: string
@@ -31,8 +34,8 @@ type FormDataProps = {
 }
 
 const singUpSchema = yup.object({
-    email: yup.string().required("Digite seu E-mail"),
-    password: yup.string().required("Digite sua senha "),
+    email: yup.string().required("Digite seu E-mail").email("E-mail incorreto"),
+    password: yup.string().required("Digite sua senha ").max(6 , "A senha deve conter 6 letras ou numeros"),
 })
   
 
@@ -43,21 +46,50 @@ const {control, handleSubmit, formState: {errors}  } = useForm<FormDataProps>({
 })
 const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
-  function handleNewAccount() {
+ const {singIn} = useAuth()
+
+ const toast = useToast()
+
+ const [isLoading, setIsLoading] = useState(false)
+
+  function handleNewAccount() { 
     navigation.navigate('signUp')
   }
 
   async function handleSingIn({email, password}: FormDataProps) {
     try {
-      const reposnse = await api.post("/users", {email, password})
-      console.log(reposnse)
+      setIsLoading(true)
+      await singIn(email, password)
+      
 
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        
-         console.log(error.response?.data.message)
+
+      setIsLoading(false)
+
+      const isAppErro = error instanceof AppError
+
+      const title = isAppErro ? error.message : "Tente novamnete mais tarde"
+
+     // Alert.alert(title)
+
+     toast.show({
+      placement: "top",
+
+      render: () => {
+        return(
+          <Toast
+            bg='$red500'
+            mt={'$16'}
+          
+          >
+            <ToastTitle color='$white'>{title}</ToastTitle>
+          </Toast>
+        )
       }
+     })
+
     }
+
   }
 
   return (
@@ -109,6 +141,8 @@ const navigation = useNavigation<AuthNavigatorRoutesProps>()
                 <Input
                   placeholder="Senha"
                   keyboardType="numeric"
+                  secureTextEntry
+
                   value={value}
                   onChangeText={onChange}
                   errorMessage={errors.password?.message}
@@ -119,6 +153,7 @@ const navigation = useNavigation<AuthNavigatorRoutesProps>()
             <Button 
             onPress={handleSubmit(handleSingIn)}
             title="Acessar" 
+            isLoading={isLoading}
             />
           </Center>
 

@@ -8,12 +8,11 @@ import { Center, Heading, Text, useToast, VStack } from '@gluestack-ui/themed'
 import * as FileSystem from 'expo-file-system'
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
+import defoulUserImg from "@assets/userPhotoDefault.png"
 import { ScrollView, TouchableOpacity } from 'react-native'
 
 export function Profile() {
-  const [userPhoto, setUserPhoto] = useState(
-    'https://github.com/OdiN-GG.png',
-  )
+  const [userPhoto, setUserPhoto] = useState<string>("")
 
   const toast = useToast()
 
@@ -65,7 +64,7 @@ export function Profile() {
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt="$6" px="$10">
           <UserPhoto
-            source={{ uri: userPhoto }}
+            source={userPhoto === "" ? defoulUserImg : userPhoto }
             size="xl"
             alt="Imagem do usuário"
           />

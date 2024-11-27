@@ -24,6 +24,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { api } from '@services/api'
 import { Alert } from 'react-native'
 import { AppError } from '@utils/AppError'
+import { useState } from 'react'
+import { useAuth } from '@hooks/useAuth'
 
 type FormDataProps = {
   name: string
@@ -56,9 +58,13 @@ export function SignUp() {
 
   const navigation = useNavigation()
 
+  const [ isLoading, setIsLoading] = useState(false)
+
   function handleGoBack() {
     navigation.goBack()
   }
+
+  const {singIn} = useAuth()
 
   const toast = useToast()
 
@@ -69,11 +75,16 @@ export function SignUp() {
     }: FormDataProps) {
 
       try {
-          const response = await api.post('/users', {name, email, password})
-          console.log(response.data)
+          setIsLoading(true)
+          await api.post('/users', {name, email, password})
+          singIn(email, password)
+
+
 
       } catch (error) {
 
+        setIsLoading(false)
+        
         const isAppError = error instanceof AppError
 
         const title : string = isAppError ? error.message : "Erro no servidor"
@@ -81,14 +92,13 @@ export function SignUp() {
         toast.show({
           placement: "top",
           
-          render: ({ id }) => {
-            const toastId = "toast-" + id
+          render: ( ) => {
             return (
               <Toast
                 bg='$red'
                 marginTop={'$16'}
               >
-                <ToastTitle>
+                <ToastTitle color='$white'>
                   {title}
                 </ToastTitle>
               </Toast>
@@ -96,8 +106,6 @@ export function SignUp() {
           },
         })
 
-        //Alert.alert(title)
-        
       }
   }
 
@@ -189,6 +197,7 @@ export function SignUp() {
             <Button
               title="Criar e acessar"
               onPress={handleSubmit(handleSignUp)}
+              isLoading={isLoading}
             />
           </Center>
 
