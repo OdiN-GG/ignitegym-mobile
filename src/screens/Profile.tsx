@@ -67,7 +67,7 @@ const profileSchema: yup.AnyObjectSchema = yup.object({
 
 export function Profile() {
   const [ isUpdate, setIsUpdate] = useState(false)
-  const [userPhoto, setUserPhoto] = useState<string>("")
+  const [userPhoto, setUserPhoto] = useState('https://github.com/rodrigorgtic.png');
 
   const toast = useToast()
 
@@ -114,9 +114,49 @@ export function Profile() {
             ),
           })
         }
+        
+        const fileExtension = photoUri.split(".").pop()
 
-        setUserPhoto(photoSelected.assets[0].uri)
-      }
+        const photoFile = { 
+          name: `${user.name}.${fileExtension}`.toLowerCase(),
+          uri: photoUri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`
+        } as any
+
+        const userPhotoFormFile = new FormData() 
+
+        userPhotoFormFile.append("avatar", photoFile)
+
+      const userPhotoAvatar =  await api.patch("users/avatar", userPhotoFormFile, {
+          headers: {
+            "Content-Type" : "multipart/form-data"
+          }
+        })
+
+        const fotoUserBack = user
+
+        fotoUserBack.avatar = userPhotoAvatar.data.avatar
+
+       await updateDateUser(fotoUserBack)
+
+       console.log(fotoUserBack)
+
+
+
+        toast.show({
+          placement: 'top',
+          render: ({ id }) => (
+            <ToastMessage
+              id={id}
+              action="success"
+              title="Foto Salva"
+              onClose={() => toast.close(id)}
+            />
+          ),
+        })
+        
+      }   
+      
     } catch (error) {
       console.log(error)
     }
@@ -130,7 +170,7 @@ export function Profile() {
       const userUpdated = user
 
       userUpdated.name = data.name
-
+      
       await api.put("users", data)
 
       await updateDateUser(userUpdated)
@@ -166,7 +206,11 @@ export function Profile() {
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt="$6" px="$10">
           <UserPhoto
-            source={userPhoto === "" ? defoulUserImg : userPhoto }
+            source={
+              user.avatar 
+              ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}`} 
+              : defoulUserImg 
+            }
             size="xl"
             alt="Imagem do usuário"
           />
@@ -273,7 +317,8 @@ export function Profile() {
             <Button 
               title="Atualizar"
               onPress={handleSubmit(handleProfileUpdate)} 
-              isLoading={isUpdate}            />
+              isLoading={isUpdate}            
+            />
           </Center>
         </Center>
       </ScrollView>
