@@ -70,7 +70,6 @@ const navigation = useNavigation<AuthNavigatorRoutesProps>()
 
       const title = isAppErro ? error.message : "Tente novamnete mais tarde"
 
-     // Alert.alert(title)
 
      toast.show({
       placement: "top",

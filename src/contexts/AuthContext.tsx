@@ -7,6 +7,7 @@ import { storageUserGet, storageUserSave, storageUserRemove } from "@storage/Sto
 
 type AuthContextDataProps = {
     user: UserDTO
+    updateDateUser: (userUpdate: UserDTO) => Promise<void>
     singIn: (name: string, passsword: string) => Promise<void>
     singOut: ()=> Promise<void>
     isLoadingUserStorageData: boolean
@@ -65,6 +66,19 @@ export function AuthContextProvider({children}: AuthContextProviderProps) {
         }
       }
 
+    async function updateDateUser(userUpdate: UserDTO){
+      try {
+
+        
+        setUser(userUpdate)
+
+        await storageUserSave(userUpdate)
+        
+      } catch (error) {
+        throw error
+      }
+    }
+
     async function singOut(){
       try {
 
@@ -107,6 +121,7 @@ export function AuthContextProvider({children}: AuthContextProviderProps) {
         <AuthContext.Provider 
             value={{ 
               user,
+              updateDateUser,
               isLoadingUserStorageData,
               singIn,
               singOut
